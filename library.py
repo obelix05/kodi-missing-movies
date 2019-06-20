@@ -26,7 +26,14 @@ Source = namedtuple('Source', ['name', 'path'])
 
 
 def jsonrpc(query):
-    return json.loads(xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8')))
+    request = xbmc.executeJSONRPC(json.dumps(query, encoding='utf-8'))
+    
+    try:
+        response = json.loads(request)
+    except UnicodeDecodeError:
+        response = json.loads(request.decode('utf-8', 'ignore'))
+    
+    return response
 
 
 def _unstack(paths):
